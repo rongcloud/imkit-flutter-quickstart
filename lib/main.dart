@@ -24,12 +24,13 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
 
+    //以下数据可自行前往融云官网注册申请 https://www.rongcloud.cn/
     //融云 appkey
-    String RongAppKey = 'pvxdm17jxjaor';
+    String RongAppKey = 'Your appKey';
     //用户 id
-    String userId = 'userIdQi';
+    String userId = 'your Userid';
     //通过用户 id 生成的对应融云 token
-    String RongIMToken = 'K+QzuboSatXXKa/8kYq6Kfq0NjWIjsdt0GZV7tNIOO1o2Snzhmxn9rwMw6wbSpi1osBWaKOrcNWew9va/4xFgCTriz7oKQ7T';
+    String RongIMToken = 'Your imtoken';
 
     //1.初始化 im SDK
     RongcloudImPlugin.init(RongAppKey);
