@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'chat_list_page.dart';
+import 'conversation_list_page.dart';
 import 'friend_list_page.dart';
 import 'dart:convert' show json;
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../util/user_data.dart';
 
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     new BottomNavigationBarItem(icon: new Icon(Icons.chat,color: Colors.grey),title: new Text("会话"),),
     new BottomNavigationBarItem(icon: new Icon(Icons.perm_contact_calendar,color: Colors.grey,),title: new Text("通讯录"),),
   ];
-  final List<StatefulWidget> vcList = [new ChatListPage(),new FriendListPage()];
+  final List<StatefulWidget> vcList = [new ConversationListPage(),new FriendListPage()];
 
   int curIndex = 0;
 
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(width: 750,height:1334)..init(context);//初始化屏幕分辨率
     return new Scaffold(
       appBar: AppBar(
         title: Text("RongCloud IM"),
