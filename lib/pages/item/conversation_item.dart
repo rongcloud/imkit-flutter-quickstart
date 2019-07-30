@@ -71,11 +71,20 @@ class _ConversationItemState extends State<ConversationItem> {
   Widget textContent() {
     TextMessage txtMsg = message.content;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Text(
-          '${txtMsg.content}',
-          softWrap: true,
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+            alignment:message.messageDirection == 1
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
+            child: RichText(
+              text: TextSpan(
+                  text: '${txtMsg.content}',
+                  style: TextStyle(color: Colors.red)),
+              softWrap: true,
+            ),
+          ),
         )
       ],
     );
