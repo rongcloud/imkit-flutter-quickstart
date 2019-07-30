@@ -7,11 +7,10 @@ import '../../util/style.dart';
 import '../../util/time.dart';
 
 class ConversationListItem extends StatefulWidget {
-  Conversation conversation = null;
+  final Conversation conversation;
+
+  const ConversationListItem({Key key, this.conversation}) : super(key: key);
   
-  ConversationListItem(Conversation con) {
-    conversation = con;
-  }
   @override
   State<StatefulWidget> createState() {
     return new _ConversationListItemState(conversation);
@@ -19,10 +18,10 @@ class ConversationListItem extends StatefulWidget {
 }
 
 class _ConversationListItemState extends State<ConversationListItem> {
-  Conversation conversation = null;
-  _ConversationListItemState(Conversation con) {
-    conversation = con;
-  }
+  final Conversation conversation ;
+
+  _ConversationListItemState(this.conversation);
+  
 
   Widget _buildTile() {
     return Material(
@@ -104,7 +103,7 @@ class _ConversationListItemState extends State<ConversationListItem> {
 
   Widget _buildTime(){
     bool mute = true;
-    String time = TimeFactory.convertTime(conversation.sentTime);
+    String time = TimeUtil.convertTime(conversation.sentTime);
     var _rightArea =<Widget>[
       Text(time,style:TextStyle(fontSize: ScreenUtil().setSp(24.0),color: Color(UIColor.ConTimeColor))),
       SizedBox(height: ScreenUtil().setHeight(15.0),)
@@ -125,8 +124,11 @@ class _ConversationListItemState extends State<ConversationListItem> {
   }
 
   Widget _buildTitle(){
-    String title = "会话标题";
-    String digest = "摘要";
+    String title = conversation.senderUserId;
+    String digest = conversation.latestMessageContent.conversationDigest();
+    if(digest == null) {
+      digest = "";
+    }
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -26,6 +26,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
 
   updateConversationList() async {
     List list = await RongcloudImPlugin.getConversationList([RCConversationType.Private,RCConversationType.Group]);
+    list.sort((a,b) => b.sentTime.compareTo(a.sentTime));
     setState(() {
       conList = list;
     });
@@ -53,7 +54,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
         if(conList.length <= 0) {
           return null;
         }
-        return ConversationListItem(conList[index]);
+        return ConversationListItem(conversation:conList[index]);
       },
     );
   }
@@ -61,6 +62,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: UniqueKey(),
       body: _buildConversationListView(),
     );
   }
