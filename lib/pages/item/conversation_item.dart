@@ -75,9 +75,9 @@ class _ConversationItemState extends State<ConversationItem> {
         Expanded(
           child: Container(
             padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-            alignment:message.messageDirection == 1
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+            alignment: message.messageDirection == 1
+                ? Alignment.centerRight
+                : Alignment.centerLeft,
             child: RichText(
               text: TextSpan(
                   text: '${txtMsg.content}',
