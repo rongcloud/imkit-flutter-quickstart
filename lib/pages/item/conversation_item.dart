@@ -31,27 +31,30 @@ class _ConversationItemState extends State<ConversationItem> {
 
   Widget subContent() {
     if (message.messageDirection == 1) {
-      return Row(
-        verticalDirection:VerticalDirection.up,
-        children: <Widget>[
-          Expanded(
-            child: textContent(),
-          ),
-         Portrait()
-        ],
+      return Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: textContent(),
+            ),
+            Portrait(),
+          ],
+        ),
       );
     } else if (message.messageDirection == 2) {
       return Expanded(
         child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Portrait(),
-          Expanded(
-            child: textContent(),
-          )
-        ],
-      ),
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Portrait(),
+            Expanded(
+              child: textContent(),
+            )
+          ],
+        ),
       );
     }
   }
@@ -66,14 +69,15 @@ class _ConversationItemState extends State<ConversationItem> {
   }
 
   Widget textContent() {
-
     TextMessage txtMsg = message.content;
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: Text(
-        '${txtMsg.content}',
-        softWrap: true,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          '${txtMsg.content}',
+          softWrap: true,
+        )
+      ],
     );
   }
 }

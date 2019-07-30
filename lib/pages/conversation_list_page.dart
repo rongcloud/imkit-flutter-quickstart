@@ -26,11 +26,13 @@ class _ConversationListPageState extends State<ConversationListPage> {
 
   updateConversationList() async {
     List list = await RongcloudImPlugin.getConversationList([RCConversationType.Private,RCConversationType.Group]);
-    if(list != null){
+    if(list != null) {
+
       list.sort((a,b) => b.sentTime.compareTo(a.sentTime));
       conList = list;
     }
     setState(() {
+      
     });
   }
 
