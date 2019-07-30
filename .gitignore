@@ -8,7 +8,7 @@
 .buildlog/
 .history
 .svn/
-
+.vscode
 pubspec.lock
 
 # IntelliJ related
@@ -30,6 +30,7 @@ pubspec.lock
 .pub-cache/
 .pub/
 /build/
+.vscode
 
 # Android related
 **/android/**/gradle-wrapper.jar

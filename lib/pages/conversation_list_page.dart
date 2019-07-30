@@ -52,7 +52,7 @@ class _ConversationListPageState extends State<ConversationListPage> {
       itemCount: conList.length,
       itemBuilder: (BuildContext context,int index) {
         if(conList.length <= 0) {
-          return null;
+          return Container();
         }
         return ConversationListItem(conversation:conList[index]);
       },
