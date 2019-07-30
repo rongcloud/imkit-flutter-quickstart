@@ -1,10 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rong/util/user_info.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../util/style.dart';
 import '../../util/time.dart';
+import '../../util/user_info_datesource.dart';
 
 class ConversationListItem extends StatefulWidget {
   final Conversation conversation;
@@ -18,9 +21,13 @@ class ConversationListItem extends StatefulWidget {
 }
 
 class _ConversationListItemState extends State<ConversationListItem> {
-  final Conversation conversation ;
+  Conversation conversation ;
+  UserInfo user;
 
-  _ConversationListItemState(this.conversation);
+  _ConversationListItemState(Conversation con) {
+    conversation = con;
+    user = UserInfoDataSource.getUserInfo(con.senderUserId);
+  }
   
 
   Widget _buildTile() {
@@ -75,9 +82,10 @@ class _ConversationListItemState extends State<ConversationListItem> {
   Widget _clipAvatar(){
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
-      child:  Container(
-        color: Colors.blue,
-      )
+      child: CachedNetworkImage(
+          fit: BoxFit.fill,
+          imageUrl: user.portraitUrl,
+        ),
     );
   } 
 
