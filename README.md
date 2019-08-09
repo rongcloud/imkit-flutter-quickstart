@@ -2,6 +2,9 @@
 
 [详细参考](https://github.com/rongcloud/rongcloud-im-flutter-sdk/blob/master/README.md)
 
+![](screenshot1.png)
+![](screenshot2.png)
+
 
 ## iOS 初次运行
 
