@@ -1,6 +1,6 @@
 # rongcloud-im-flutter-quickstart
 
-[详细参考](https://github.com/rongcloud/rongcloud-im-flutter-sdk/blob/master/README.md)
+[详细参考](https://github.com/rongcloud/rongcloud-im-flutter-sdk)
 
 ![](screenshot1.png)
 ![](screenshot2.png)
