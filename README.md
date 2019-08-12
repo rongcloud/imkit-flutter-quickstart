@@ -1,6 +1,7 @@
 # rongcloud-im-flutter-quickstart
 
-[详细参考](https://github.com/rongcloud/rongcloud-im-flutter-sdk)
+基于 [RongCloud IM Flutter SDK](https://github.com/rongcloud/rongcloud-im-flutter-sdk) 的 QuickStart
+
 
 ![](screenshot1.png)
 ![](screenshot2.png)
@@ -19,11 +20,11 @@
 
  Podfile 上添加 `use_frameworks!` 参数
  
- Xcode 打开，选择 TARGETS -> Runnder -> Build Settings -> Levels 右边加号 -> Add User-Defined Setting -> 添加字段 `SWIFT_VERSION`，写上 swift 版本，如 4.0
+ Xcode 打开，选择 TARGETS -> Runnder -> Build Settings -> Levels 右边加号 -> Add User-Defined Setting -> 添加字段 `SWIFT_VERSION`，写上 Swift 版本，如 4.0
 
 ## Android 初次运行
 
-Android 依赖不同的 Flutter Plugin 可能会出现不同版本的 gradle 导致编译不通过，可以按需做如下处理
+Android 依赖不同的 Flutter Plugin 可能会出现不同版本的 Gradle 导致编译不通过，可以按需做如下处理
 
 1. `将所有的 build.gradle 的 gradle 版本统一`，例如统一改为 3.4.1
 2. `将 gradle-wrapper.properties 的 distributionUrl `版本改为和上一步统一，如上一步是 3.4.1 ，那么此处应该改为 5.1.1
@@ -34,5 +35,5 @@ android.useAndroidX=true
 android.enableJetifier=true
 ```
 
-欢迎大家提出 issue 和 PR
+欢迎大家提出 Issue 和 PR
 
