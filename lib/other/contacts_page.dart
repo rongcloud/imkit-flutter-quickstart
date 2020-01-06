@@ -36,8 +36,12 @@ class _ContactsPageState extends State<ContactsPage> {
   }
 
   void _onTapUser(UserInfo user) {
-    Map arg = {"coversationType":RCConversationType.Private,"targetId":user.userId};
+    Map arg = {"coversationType":RCConversationType.Private,"targetId":user.id};
     Navigator.pushNamed(context, "/conversation",arguments: arg);
+  }
+
+  void _pushToDebug() {
+    Navigator.pushNamed(context, "/debug");
   }
 
   Widget getWidget(UserInfo user) {
@@ -69,6 +73,17 @@ class _ContactsPageState extends State<ContactsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("RongCloud IM"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.more),
+            onPressed: () {
+              _pushToDebug();
+            },
+          ),
+        ],
+      ),
       body: new ListView(
         children: this.widgetList,
       ),

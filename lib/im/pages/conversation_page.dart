@@ -36,7 +36,7 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
   ConversationStatus currentStatus;//当前输入工具栏的状态
 
   ScrollController _scrollController = ScrollController();
-  UserInfo user;
+  BaseInfo info;
 
   _ConversationPageState({this.arguments});
   @override
@@ -48,7 +48,11 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
     targetId = arguments["targetId"];
     currentStatus = ConversationStatus.Normal;
 
-    this.user = UserInfoDataSource.getUserInfo(targetId);
+    if(conversationType == RCConversationType.Private) {
+      this.info = UserInfoDataSource.getUserInfo(targetId);
+    }else {
+      this.info = UserInfoDataSource.getGroupInfo(targetId);
+    }
 
     //增加 IM 监听
     _addIMHandler();
@@ -68,7 +72,9 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
   @override
   void dispose() {
     super.dispose();
+    RongcloudImPlugin.clearMessagesUnreadStatus(conversationType, targetId);
     EventBus.instance.commit(EventKeys.ConversationPageDispose, null);
+    EventBus.instance.removeListener(EventKeys.ReceiveMessage);
   }
 
   void _pullMoreHistoryMessage() async {
@@ -81,12 +87,14 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
   }
 
   _addIMHandler() {
-    RongcloudImPlugin.onMessageReceived = (Message msg, int left) {
+    EventBus.instance.addListener(EventKeys.ReceiveMessage, (map) {
+      Message msg = map["message"];
+      // int left = map["left"];
       if (msg.targetId == this.targetId) {
         _insertOrReplaceMessage(msg);
       }
       _refreshUI();
-    };
+    });
 
     RongcloudImPlugin.onMessageSend = (int messageId, int status, int code) async {
       Message msg = await RongcloudImPlugin.getMessage(messageId);
@@ -131,6 +139,7 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
       return Container(
         height: 180,
         child: GridView.count(
+          physics: new NeverScrollableScrollPhysics(),
           crossAxisCount: 4,
           padding: EdgeInsets.all(10),
           children: extWidgetList,
@@ -182,8 +191,15 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
       _insertOrReplaceMessage(msg);
     });
 
+    Widget videoWidget = WidgetUtil.buildExtentionWidget(Icons.video_call, "视频", () async {
+      print("push to video record page");
+      Map map = {"coversationType":conversationType,"targetId":targetId};
+      Navigator.pushNamed(context, "/video_record",arguments: map);
+    });
+
     extWidgetList.add(imageWidget);
     extWidgetList.add(cameraWidget);
+    extWidgetList.add(videoWidget);
   }
 
   bool _needShowTime(int index) {
@@ -219,7 +235,7 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('与${this.user.name}的会话'),
+        title: Text('与${this.info.name}的会话'),
       ),
       body: Container(
         child: Stack(
@@ -268,12 +284,14 @@ class _ConversationPageState extends State<ConversationPage> implements Conversa
 
   @override
   void didTapMessageItem(Message message) {
-    print("didTapMessageItem "+message.content.getObjectName());
+    print("didTapMessageItem "+message.objectName);
     if(message.content is VoiceMessage) {
       VoiceMessage msg = message.content;
       MediaUtil.instance.startPlayAudio(msg.remoteUrl);
     }else if(message.content is ImageMessage) {
       Navigator.pushNamed(context, "/image_preview",arguments: message);
+    }else if(message.content is SightMessage) {
+      Navigator.pushNamed(context, "/video_play",arguments: message);
     }
   }
 

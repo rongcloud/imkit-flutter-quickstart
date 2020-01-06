@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
+import '../util/media_util.dart';
 
 class ImagePreviewPage extends StatefulWidget {
   final Message message;
@@ -24,8 +25,9 @@ class _ImagePreviewPageState extends State<ImagePreviewPage> {
     ImageMessage msg = message.content;
     Widget widget;
     if(msg.localPath != null) {
-      File file = File(msg.localPath);
-      if(file != null) {
+      String path = MediaUtil.instance.getCorrectedLocalPath(msg.localPath);
+      File file = File(path);
+      if(file != null && file.existsSync()) {
         widget = Image.file(file);
       }else {
         widget = Image.network(msg.imageUri);

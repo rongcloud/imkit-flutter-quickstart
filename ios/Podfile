@@ -4,7 +4,6 @@
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-# audio_recorder 是 swift 版的，所以要加此参数
 use_frameworks!
 
 project 'Runner', {
@@ -44,7 +43,7 @@ target 'Runner' do
   # Flutter Pods
   generated_xcode_build_settings = parse_KV_file('./Flutter/Generated.xcconfig')
   if generated_xcode_build_settings.empty?
-    puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter packages get is executed first."
+    puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter pub get is executed first."
   end
   generated_xcode_build_settings.map { |p|
     if p[:name] == 'FLUTTER_FRAMEWORK_DIR'

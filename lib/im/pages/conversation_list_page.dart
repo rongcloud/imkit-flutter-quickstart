@@ -41,6 +41,7 @@ class _ConversationListPageState extends State<ConversationListPage> implements 
   void dispose() {
     super.dispose();
     EventBus.instance.removeListener(EventKeys.ConversationPageDispose);
+    EventBus.instance.removeListener(EventKeys.ReceiveMessage);
   }
 
   updateConversationList() async {
@@ -59,11 +60,15 @@ class _ConversationListPageState extends State<ConversationListPage> implements 
   }
 
   addIMhandler() {
-    RongcloudImPlugin.onMessageReceived = (Message msg, int left) {
-      if(left == 0) {
+    EventBus.instance.addListener(EventKeys.ReceiveMessage, (map) {
+      // Message msg = map["message"];
+      int left = map["left"];
+      bool hasPackage = map["hasPackage"];
+      //如果离线消息过多，那么可以等到 hasPackage 为 false 并且 left == 0 时更新会话列表
+      if(!hasPackage && left == 0) {
         updateConversationList();
       }
-    };
+    });
 
     RongcloudImPlugin.onConnectionStatusChange = (int connectionStatus) {
       if(RCConnectionStatus.Connected == connectionStatus) {
@@ -109,6 +114,9 @@ class _ConversationListPageState extends State<ConversationListPage> implements 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text("RongCloud IM"),
+      ),
       key: UniqueKey(),
       body: _buildConversationListView(),
     );

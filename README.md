@@ -1,11 +1,7 @@
-# rongcloud-im-flutter-quickstart
+# 融云 IM Flutter Plugin Demo
 
-基于 [RongCloud IM Flutter SDK](https://github.com/rongcloud/rongcloud-im-flutter-sdk) 的 QuickStart
-
-
-![](screenshot1.png)
-![](screenshot2.png)
-
+![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot1.png)
+![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot2.png)
 
 ## iOS 初次运行
 
@@ -34,6 +30,4 @@ Android 依赖不同的 Flutter Plugin 可能会出现不同版本的 Gradle 导
 android.useAndroidX=true
 android.enableJetifier=true
 ```
-
-欢迎大家提出 Issue 和 PR
 
