@@ -1,7 +1,12 @@
 # 融云 IM Flutter Plugin Demo
 
-![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot1.png)
-![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot2.png)
+![](https://github.com/rongcloud/imkit-flutter-quickstart/blob/master/screenshot1.png?raw=true)
+![](https://github.com/rongcloud/imkit-flutter-quickstart/blob/master/screenshot2.png?raw=true)
+
+## 如何登录
+
+登录时使用的账号是 SealTalk 的账号，但是当前项目没有注册入口，您如果没有 SealTalk 账号，可以去 [融云 Demo 体验](https://www.rongcloud.cn/downloads/demo) 下载原生的 SealTalk 注册后登录。
+
 
 ## iOS 初次运行
 
