@@ -3,7 +3,7 @@ package com.example.rongcloud_im_plugin_example;
 import android.content.Context;
 import android.os.Bundle;
 
-import io.rong.flutter.imlib.RCIMFlutterWrapper;
+//import com.example.rongcloud_im_plugin.RCIMFlutterWrapper;
 
 import java.util.HashMap;
 import java.util.Map;

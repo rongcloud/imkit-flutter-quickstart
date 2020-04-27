@@ -5,19 +5,19 @@ import '../../util/media_util.dart';
 class BottomInputBar extends StatefulWidget {
   BottomInputBarDelegate delegate;
   _BottomInputBarState state;
-  BottomInputBar(BottomInputBarDelegate delegate) {
+  BottomInputBar(
+      BottomInputBarDelegate delegate) {
     this.delegate = delegate;
   }
   @override
   _BottomInputBarState createState() =>
       state = _BottomInputBarState(this.delegate);
 
-  void setTextContent(String textContent) {
-    this.state.setText(textContent);
-  }
-
-  void refreshUI() {
-    this.state._refreshUI();
+  void setTextContent (String textCotent){
+    if(textCotent == null){
+      textCotent = '';
+    }
+    this.state.textEditingController.text = textCotent;
   }
 }
 
@@ -28,34 +28,18 @@ class _BottomInputBarState extends State<BottomInputBar> {
   InputBarStatus inputBarStatus;
   TextEditingController textEditingController;
 
-  _BottomInputBarState(BottomInputBarDelegate delegate) {
+  _BottomInputBarState(
+      BottomInputBarDelegate delegate) {
     this.delegate = delegate;
     this.inputBarStatus = InputBarStatus.Normal;
     this.textEditingController = TextEditingController();
-
     this.textField = TextField(
       onSubmitted: _clickSendMessage,
       controller: textEditingController,
       decoration:
           InputDecoration(border: InputBorder.none, hintText: '随便说点什么吧'),
       focusNode: focusNode,
-      autofocus: true,
     );
-  }
-
-  void setText(String textContent) {
-    if (textContent == null) {
-      textContent = '';
-    }
-    this.textEditingController.text =
-        this.textEditingController.text + textContent;
-    this.textEditingController.selection = TextSelection.fromPosition(
-        TextPosition(offset: textEditingController.text.length));
-    _refreshUI();
-  }
-
-  void _refreshUI() {
-    setState(() {});
   }
 
   @override
@@ -77,25 +61,12 @@ class _BottomInputBarState extends State<BottomInputBar> {
       print('不能为空');
       return;
     }
-
     if (this.delegate != null) {
       this.delegate.willSendText(messageStr);
     } else {
       print("没有实现 BottomInputBarDelegate");
     }
     this.textField.controller.text = '';
-  }
-
-  switchPhrases() {
-    print("switchPhrases");
-    if (focusNode.hasFocus) {
-      focusNode.unfocus();
-    }
-    InputBarStatus status = InputBarStatus.Normal;
-    if (this.inputBarStatus != InputBarStatus.Phrases) {
-      status = InputBarStatus.Phrases;
-    }
-    _notifyInputStatusChanged(status);
   }
 
   switchVoice() {
@@ -202,50 +173,33 @@ class _BottomInputBarState extends State<BottomInputBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              GestureDetector(
-                  onTap: () {
-                    switchPhrases();
-                  },
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(6, 6, 12, 6),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 80,
-                        height: 22,
-                        color: Color(0xffC8C8C8),
-                        child: Text(
-                          '快捷回复',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                      ),
-                    ),
-                  )),
-              Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.mic),
-                    iconSize: 32,
-                    onPressed: () {
-                      switchVoice();
-                    },
-                  ),
-                  Expanded(child: _getMainInputField()),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    iconSize: 32,
-                    onPressed: () {
-                      switchExtention();
-                    },
-                  ),
-                ],
-              ),
-            ]));
+      color: Colors.white,
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.mic),
+            iconSize: 32,
+            onPressed: () {
+              switchVoice();
+            },
+          ),
+          Expanded(child: _getMainInputField()),
+          IconButton(
+            icon: Icon(Icons.add),
+            iconSize: 32,
+            onPressed: () {
+              switchExtention();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    this.textEditingController.dispose();
+    super.dispose();
   }
 }
 
@@ -253,7 +207,6 @@ enum InputBarStatus {
   Normal, //正常
   Voice, //语音输入
   Extention, //扩展栏
-  Phrases, //快捷回复
 }
 
 abstract class BottomInputBarDelegate {
