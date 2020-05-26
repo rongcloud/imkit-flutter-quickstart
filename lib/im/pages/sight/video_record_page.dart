@@ -11,6 +11,8 @@ import 'package:video_player/video_player.dart';
 import 'package:rongcloud_im_plugin/rongcloud_im_plugin.dart';
 import 'record_top_item.dart';
 import 'record_bottom_item.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import '../../util/style.dart';
 
 class VideoRecordPage extends StatefulWidget {
   final Map arguments;
@@ -29,6 +31,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   String targetId;
   int recodeTime = 0;
   Timer timer;
+  bool isSecretChat = false;
 
   CameraController cameraController;
   VideoPlayerController videoPlayerController;
@@ -43,6 +46,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     super.initState();
     conversationType = arguments["coversationType"];
     targetId = arguments["targetId"];
+    isSecretChat = arguments["isSecretChat"];
     initCamera();
     topitem = TopRecordItem(this);
   }
@@ -143,7 +147,9 @@ class _VideoRecordPageState extends State<VideoRecordPage>
 
   void resetData() {
     videoPath = null;
-    if (videoPlayerController.value.isPlaying) {
+    if (videoPlayerController != null &&
+        videoPlayerController.value != null &&
+        videoPlayerController.value.isPlaying) {
       videoPlayerController.pause();
     }
     videoPlayerController = null;
@@ -190,7 +196,7 @@ class _VideoRecordPageState extends State<VideoRecordPage>
   }
 
   Widget _getCameraPreviewWidget() {
-    Widget widget = CameraPreview(cameraController);  
+    Widget widget = CameraPreview(cameraController);
     if (videoPath != null) {
       widget = VideoPlayer(videoPlayerController);
     }
@@ -262,11 +268,21 @@ class _VideoRecordPageState extends State<VideoRecordPage>
     if (videoPath != null) {
       print("onFinishEvent con $conversationType targetId $targetId");
       SightMessage sightMessage = SightMessage.obtain(videoPath, recodeTime);
-      RongcloudImPlugin.sendMessage(conversationType, targetId, sightMessage);
+      if (conversationType == RCConversationType.Private) {
+        sightMessage.destructDuration =
+            isSecretChat ? RCDuration.MediaMessageBurnDuration + recodeTime : 0;
+      }
+      RongIMClient.sendMessage(conversationType, targetId, sightMessage);
+      _saveVideo(videoPath);
       onPop();
     } else {
       print("onFinishEvent videoPath is null");
     }
+  }
+
+  void _saveVideo(String videoPath) async {
+    final result = await ImageGallerySaver.saveFile(videoPath);
+    print("save video result: " + result.toString());
   }
 
   @override

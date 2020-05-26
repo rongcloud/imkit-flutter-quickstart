@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../../util/media_util.dart';
+import '../../util/style.dart';
 
 class BottomInputBar extends StatefulWidget {
   BottomInputBarDelegate delegate;
   _BottomInputBarState state;
-  BottomInputBar(
-      BottomInputBarDelegate delegate) {
+  BottomInputBar(BottomInputBarDelegate delegate) {
     this.delegate = delegate;
   }
   @override
   _BottomInputBarState createState() =>
       state = _BottomInputBarState(this.delegate);
 
-  void setTextContent (String textCotent){
-    if(textCotent == null){
-      textCotent = '';
-    }
-    this.state.textEditingController.text = textCotent;
+  void setTextContent(String textContent) {
+    this.state.setText(textContent);
+  }
+
+  void refreshUI() {
+    this.state._refreshUI();
   }
 }
 
@@ -28,18 +29,36 @@ class _BottomInputBarState extends State<BottomInputBar> {
   InputBarStatus inputBarStatus;
   TextEditingController textEditingController;
 
-  _BottomInputBarState(
-      BottomInputBarDelegate delegate) {
+  _BottomInputBarState(BottomInputBarDelegate delegate) {
     this.delegate = delegate;
     this.inputBarStatus = InputBarStatus.Normal;
     this.textEditingController = TextEditingController();
+
     this.textField = TextField(
       onSubmitted: _clickSendMessage,
       controller: textEditingController,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: '随便说点什么吧'),
+      decoration: InputDecoration(
+          border: InputBorder.none, hintText: RCString.BottomInputTextHint),
       focusNode: focusNode,
+      autofocus: true,
+      maxLines: null,
+      keyboardType: TextInputType.text,
     );
+  }
+
+  void setText(String textContent) {
+    if (textContent == null) {
+      textContent = '';
+    }
+    this.textEditingController.text =
+        this.textEditingController.text + textContent;
+    this.textEditingController.selection = TextSelection.fromPosition(
+        TextPosition(offset: textEditingController.text.length));
+    _refreshUI();
+  }
+
+  void _refreshUI() {
+    setState(() {});
   }
 
   @override
@@ -61,6 +80,7 @@ class _BottomInputBarState extends State<BottomInputBar> {
       print('不能为空');
       return;
     }
+
     if (this.delegate != null) {
       this.delegate.willSendText(messageStr);
     } else {
@@ -69,11 +89,35 @@ class _BottomInputBarState extends State<BottomInputBar> {
     this.textField.controller.text = '';
   }
 
+  switchPhrases() {
+    print("switchPhrases");
+    if (focusNode.hasFocus) {
+      focusNode.unfocus();
+    }
+    InputBarStatus status = InputBarStatus.Normal;
+    if (this.inputBarStatus != InputBarStatus.Phrases) {
+      status = InputBarStatus.Phrases;
+    }
+    _notifyInputStatusChanged(status);
+  }
+
   switchVoice() {
     print("switchVoice");
     InputBarStatus status = InputBarStatus.Normal;
     if (this.inputBarStatus != InputBarStatus.Voice) {
       status = InputBarStatus.Voice;
+    }
+    _notifyInputStatusChanged(status);
+  }
+
+  switchEmoji() {
+    print("switchEmoji");
+    InputBarStatus status = InputBarStatus.Normal;
+    if (this.inputBarStatus != InputBarStatus.Emoji) {
+      if (focusNode.hasFocus) {
+        focusNode.unfocus();
+      }
+      status = InputBarStatus.Emoji;
     }
     _notifyInputStatusChanged(status);
   }
@@ -130,7 +174,7 @@ class _BottomInputBarState extends State<BottomInputBar> {
         alignment: Alignment.center,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          child: Text("按住 说话", textAlign: TextAlign.center),
+          child: Text(RCString.BottomTapSpeak, textAlign: TextAlign.center),
           onLongPress: () {
             _onVoiceGesLongPress();
           },
@@ -142,7 +186,16 @@ class _BottomInputBarState extends State<BottomInputBar> {
     } else {
       widget = Container(
         padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: this.textField,
+        child: new ConstrainedBox(
+          constraints: BoxConstraints(
+              // maxHeight: 200.0,
+              ),
+          child: new SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            reverse: true,
+            child: this.textField,
+          ),
+        ),
       );
     }
     return Container(
@@ -173,33 +226,57 @@ class _BottomInputBarState extends State<BottomInputBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.mic),
-            iconSize: 32,
-            onPressed: () {
-              switchVoice();
-            },
-          ),
-          Expanded(child: _getMainInputField()),
-          IconButton(
-            icon: Icon(Icons.add),
-            iconSize: 32,
-            onPressed: () {
-              switchExtention();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    this.textEditingController.dispose();
-    super.dispose();
+        color: Colors.white,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              GestureDetector(
+                  onTap: () {
+                    switchPhrases();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(6, 6, 12, 6),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 80,
+                        height: 22,
+                        color: Color(0xffC8C8C8),
+                        child: Text(
+                          RCString.BottomCommonPhrases,
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ),
+                    ),
+                  )),
+              Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.mic),
+                    iconSize: 32,
+                    onPressed: () {
+                      switchVoice();
+                    },
+                  ),
+                  Expanded(child: _getMainInputField()),
+                  IconButton(
+                    icon: Icon(Icons.mood), // sentiment_ver
+                    iconSize: 32,
+                    onPressed: () {
+                      switchEmoji();
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    iconSize: 32,
+                    onPressed: () {
+                      switchExtention();
+                    },
+                  ),
+                ],
+              ),
+            ]));
   }
 }
 
@@ -207,6 +284,8 @@ enum InputBarStatus {
   Normal, //正常
   Voice, //语音输入
   Extention, //扩展栏
+  Phrases, //快捷回复
+  Emoji, // emoji输入
 }
 
 abstract class BottomInputBarDelegate {

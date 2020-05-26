@@ -1,13 +1,13 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 ///媒体工具，负责申请权限，选照片，拍照，录音，播放语音
 class MediaUtil {
@@ -29,12 +29,14 @@ class MediaUtil {
   }
 
   //请求权限：相册，相机，麦克风
-  void requestPermissions() {
-    PermissionHandler().requestPermissions([
-      PermissionGroup.photos,
-      PermissionGroup.camera,
-      PermissionGroup.microphone
-    ]);
+  void requestPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.photos,
+      Permission.camera,
+      Permission.microphone,
+      Permission.storage
+    ].request();
+    print(statuses[Permission.location]);
   }
 
   //拍照，成功则返回照片的本地路径，注：Android 必须要加 file:// 头
@@ -61,6 +63,12 @@ class MediaUtil {
       imgPath = "file://" + imgfile.path;
     }
     return imgPath;
+  }
+
+  //选择本地文件，成功返回文件信息
+  Future<List<File>> pickFiles() async {
+    List<File> files = await FilePicker.getMultiFile();
+    return files;
   }
 
   //开始录音
