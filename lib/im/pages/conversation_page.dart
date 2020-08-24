@@ -822,7 +822,6 @@ class _ConversationPageState extends State<ConversationPage>
         message.content.destructDuration != null &&
         message.content.destructDuration > 0 &&
         multiSelect != true) RongIMClient.messageBeginDestruct(message);
-    var bool = message.content is ReferenceMessage;
     if (message.content is VoiceMessage) {
       VoiceMessage msg = message.content;
       if (msg.localPath != null &&
@@ -861,7 +860,7 @@ class _ConversationPageState extends State<ConversationPage>
       }
       Map param = {"url": url, "title": CombineMessageUtils().getTitle(msg)};
       Navigator.pushNamed(context, "/webview", arguments: param);
-    } else if (bool) {
+    } else if (message.content is ReferenceMessage) {
       ReferenceMessage msg = message.content;
       if (msg.referMsg is ImageMessage) {
         // 引用的消息为图片时的点击事件
