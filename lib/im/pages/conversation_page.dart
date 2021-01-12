@@ -316,7 +316,7 @@ class _ConversationPageState extends State<ConversationPage>
       if (code == 0 && msgList != null) {
         msgList.sort((a, b) => b.sentTime.compareTo(a.sentTime));
         messageDataSource += msgList;
-        if (msgList.length == 20) {
+        if (msgList.length > 0) {
           _refreshMessageContentListUI();
         }
       }
@@ -544,6 +544,16 @@ class _ConversationPageState extends State<ConversationPage>
         // imgMsg.mentionedInfo = mentionedInfo;
         // // ImageMessage 测试阅后即焚携带时间
         // imgMsg.destructDuration = 10;
+
+        // Message message = Message();
+        // message.conversationType = conversationType;
+        // message.targetId = targetId;
+        // message.objectName = ImageMessage.objectName;
+        // message.content = imgMsg;
+        // Message msg = await RongIMClient.sendIntactMessageWithCallBack(
+        //     message, "", "", (int messageId, int status, int code) {
+        //   String result = "messageId:$messageId status:$status code:$code";
+        // });
         Message msg =
             await RongIMClient.sendMessage(conversationType, targetId, imgMsg);
         _insertOrReplaceMessage(msg);
@@ -591,6 +601,15 @@ class _ConversationPageState extends State<ConversationPage>
           int lastDotIndex = name.lastIndexOf(".");
           FileMessage fileMessage = FileMessage.obtain(localPaht);
           fileMessage.mType = name.substring(lastDotIndex + 1);
+          // Message message = Message();
+          // message.conversationType = conversationType;
+          // message.targetId = targetId;
+          // message.objectName = FileMessage.objectName;
+          // message.content = fileMessage;
+          // Message msg = await RongIMClient.sendIntactMessageWithCallBack(
+          //     message, "", "", (int messageId, int status, int code) {
+          //   String result = "messageId:$messageId status:$status code:$code";
+          // });
           Message msg = await RongIMClient.sendMessage(
               conversationType, targetId, fileMessage);
           _insertOrReplaceMessage(msg);
@@ -818,6 +837,14 @@ class _ConversationPageState extends State<ConversationPage>
     //     "getConnectionStatus: ${await RongIMClient.getConnectionStatus()}",
     //     name: pageName);
     // RongIMClient.setReconnectKickEnable(true);
+    // RongIMClient.updateMessageExpansion(
+    //     {'1': '1', '2': '2'}, message.messageUId, (int code) {
+    //   developer.log("updateMessageExpansion $code" , name: pageName);
+    // });
+    // RongIMClient.removeMessageExpansionForKey(
+    //     ['1', '2'], message.messageUId, (int code) {
+    //   developer.log("updateMessageExpansion $code" , name: pageName);
+    // });
     if (message.messageDirection == RCMessageDirection.Receive &&
         message.content.destructDuration != null &&
         message.content.destructDuration > 0 &&
@@ -1027,6 +1054,56 @@ class _ConversationPageState extends State<ConversationPage>
 
     Message message =
         await RongIMClient.sendMessage(conversationType, targetId, msg);
+    // Message message = Message();
+    // message.conversationType = conversationType;
+    // message.targetId = targetId;
+    // message.objectName = TextMessage.objectName;
+    // message.content = msg;
+    // message.canIncludeExpansion = true;
+    // message.expansionDic = {
+    //   "1": "1",
+    //   "2": "2",
+    //   "3": "3",
+    //   "4": "4",
+    // };
+    // MessagePushConfig messagePushConfing = MessagePushConfig();
+    // messagePushConfing.pushTitle = "1";
+    // messagePushConfing.pushContent = "2";
+    // messagePushConfing.pushData = "3";
+    // messagePushConfing.forceShowDetailContent = true;
+    // AndroidConfig androidConfig = AndroidConfig();
+    // androidConfig.notificationId = "4";
+    // androidConfig.channelIdMi = "5";
+    // androidConfig.channelIdHW = "6";
+    // androidConfig.channelIdOPPO = "7";
+    // androidConfig.typeVivo = "8";
+    // messagePushConfing.androidConfig = androidConfig;
+    // IOSConfig iosConfig = IOSConfig();
+    // iosConfig.thread_id = "9";
+    // iosConfig.apns_collapse_id = "10";
+    // messagePushConfing.iOSConfig = iosConfig;
+    // message.messagePushConfig = messagePushConfing;
+
+    // // 传 null 测试开始
+    // message.messageId = null;
+    // message.messageUId = null;
+    // message.messageDirection = null;
+    // message.senderUserId = null;
+    // message.receivedStatus = null;
+    // message.sentStatus = null;
+    // message.sentTime = null;
+    // message.extra = null;
+    // message.canIncludeExpansion = null;
+    // message.expansionDic = null;
+    // message.readReceiptInfo = null;
+    // message.originContentMap = null;
+    // message.messageConfig = MessageConfig();
+    // message.messagePushConfig = MessagePushConfig();
+    // // 传 null 测试结束
+
+    // await RongIMClient.sendIntactMessageWithCallBack(message, "", "",(int messageId, int status, int code){
+    //   String result = "messageId:$messageId status:$status code:$code";
+    // });
     userIdList.clear();
     bottomInputBar.clearReferenceMessage();
     _insertOrReplaceMessage(message);
