@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  rongcloud_im_plugin: 5.1.0
+  rongcloud_im_plugin: 5.1.1
   cupertino_icons: ^0.1.2
   cached_network_image: ^2.0.0-rc
   image_picker: ^0.6.0+20
