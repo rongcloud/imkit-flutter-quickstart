@@ -1,5 +1,7 @@
 # 融云 IM Flutter Plugin Demo
 
+融云 IM Flutter Lib 插件 QuickDemo：基于 IM Flutter Lib 插件封装，助力 Flutter 应用快速构建跨平台即时通讯能力。
+
 ![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot1.png)
 ![](https://raw.githubusercontent.com/rongcloud/imkit-flutter-quickstart/master/screenshot2.png)
 
